@@ -18,10 +18,15 @@ export interface Database {
   public: {
     Tables: {
       events: {
-        Row: EventRow
+        Row: Pick<EventRow, keyof EventRow>
         Insert: Omit<EventRow, 'id' | 'created_at'>
         Update: Partial<Omit<EventRow, 'id' | 'created_at'>>
+        Relationships: []
       }
     }
+    Views: Record<string, never>
+    Functions: Record<string, never>
+    Enums: Record<string, never>
+    CompositeTypes: Record<string, never>
   }
 }
