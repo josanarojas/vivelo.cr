@@ -13,6 +13,23 @@ export interface EventFormValue {
   estado: 'borrador'
 }
 
+const FORM_FIELDS = ['nombre', 'tipo_evento', 'fecha_evento', 'ubicacion', 'slug', 'paquete'] as const
+
+/**
+ * Builds `v_*` params that carry the submitted (unvalidated) form values so a
+ * redirect can repopulate the form instead of wiping it out.
+ */
+export function buildSubmittedValueParams(formData: FormData): URLSearchParams {
+  const params = new URLSearchParams()
+  for (const field of FORM_FIELDS) {
+    const raw = formData.get(field)
+    if (raw !== null) {
+      params.set(`v_${field}`, String(raw))
+    }
+  }
+  return params
+}
+
 export function validateEventForm(formData: FormData): {
   value: EventFormValue | null
   errors: Record<string, string>

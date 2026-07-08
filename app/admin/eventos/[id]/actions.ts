@@ -5,28 +5,30 @@ import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { updateEvent, deleteEvent } from '@/lib/events'
-import { validateEventForm } from '@/app/admin/nuevo-evento/validate'
+import { validateEventForm, buildSubmittedValueParams } from '@/app/admin/nuevo-evento/validate'
 
 export async function updateEventAction(id: string, formData: FormData) {
   const { value, errors } = validateEventForm(formData)
 
   if (!value) {
     const params = new URLSearchParams(errors)
-    const fields = ['nombre', 'tipo_evento', 'fecha_evento', 'ubicacion', 'slug', 'paquete']
-    for (const field of fields) {
-      const raw = formData.get(field)
-      if (raw !== null) {
-        params.set(`v_${field}`, String(raw))
-      }
-    }
+    const submitted = buildSubmittedValueParams(formData)
+    submitted.forEach((val, key) => params.set(key, val))
     redirect(`/admin/eventos/${id}?${params.toString()}`)
   }
 
+  // `estado` is not editable from this form (no UI control for it) — strip it
+  // so updating an event never resets its estado back to 'borrador'.
+  const { estado: _estado, ...updatePayload } = value
+
   const supabase = await createClient()
-  const { error } = await updateEvent(supabase, id, value)
+  const { error } = await updateEvent(supabase, id, updatePayload)
 
   if (error) {
-    redirect(`/admin/eventos/${id}?error=No se pudo actualizar el evento`)
+    const params = new URLSearchParams({ error: 'No se pudo actualizar el evento' })
+    const submitted = buildSubmittedValueParams(formData)
+    submitted.forEach((val, key) => params.set(key, val))
+    redirect(`/admin/eventos/${id}?${params.toString()}`)
   }
 
   revalidatePath('/admin')
@@ -35,7 +37,11 @@ export async function updateEventAction(id: string, formData: FormData) {
 
 export async function deleteEventAction(id: string) {
   const supabase = await createClient()
-  await deleteEvent(supabase, id)
+  const { error } = await deleteEvent(supabase, id)
+
+  if (error) {
+    redirect(`/admin/eventos/${id}?error=No se pudo eliminar el evento`)
+  }
 
   revalidatePath('/admin')
   redirect('/admin')
