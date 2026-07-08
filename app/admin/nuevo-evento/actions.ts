@@ -12,6 +12,13 @@ export async function createEventAction(formData: FormData) {
 
   if (!value) {
     const params = new URLSearchParams(errors)
+    const fields = ['nombre', 'tipo_evento', 'fecha_evento', 'ubicacion', 'slug', 'paquete']
+    for (const field of fields) {
+      const raw = formData.get(field)
+      if (raw !== null) {
+        params.set(`v_${field}`, String(raw))
+      }
+    }
     redirect(`/admin/nuevo-evento?${params.toString()}`)
   }
 

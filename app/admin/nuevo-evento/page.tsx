@@ -16,13 +16,13 @@ export default async function NuevoEventoPage({
 
       <div className="space-y-1">
         <label htmlFor="nombre" className="block text-sm font-medium">Nombre</label>
-        <input id="nombre" name="nombre" className="w-full rounded border px-3 py-2" />
+        <input id="nombre" name="nombre" defaultValue={params.v_nombre} className="w-full rounded border px-3 py-2" />
         {params.nombre && <p className="text-sm text-red-600">{params.nombre}</p>}
       </div>
 
       <div className="space-y-1">
         <label htmlFor="tipo_evento" className="block text-sm font-medium">Tipo de evento</label>
-        <select id="tipo_evento" name="tipo_evento" className="w-full rounded border px-3 py-2">
+        <select id="tipo_evento" name="tipo_evento" defaultValue={params.v_tipo_evento} className="w-full rounded border px-3 py-2">
           <option value="boda">Boda</option>
           <option value="cumpleanos">Cumpleaños</option>
           <option value="otro">Otro</option>
@@ -36,6 +36,7 @@ export default async function NuevoEventoPage({
           id="fecha_evento"
           name="fecha_evento"
           type="datetime-local"
+          defaultValue={params.v_fecha_evento}
           className="w-full rounded border px-3 py-2"
         />
         {params.fecha_evento && <p className="text-sm text-red-600">{params.fecha_evento}</p>}
@@ -43,19 +44,19 @@ export default async function NuevoEventoPage({
 
       <div className="space-y-1">
         <label htmlFor="ubicacion" className="block text-sm font-medium">Ubicación</label>
-        <input id="ubicacion" name="ubicacion" className="w-full rounded border px-3 py-2" />
+        <input id="ubicacion" name="ubicacion" defaultValue={params.v_ubicacion} className="w-full rounded border px-3 py-2" />
         {params.ubicacion && <p className="text-sm text-red-600">{params.ubicacion}</p>}
       </div>
 
       <div className="space-y-1">
         <label htmlFor="slug" className="block text-sm font-medium">Slug (URL)</label>
-        <input id="slug" name="slug" className="w-full rounded border px-3 py-2" />
+        <input id="slug" name="slug" defaultValue={params.v_slug} className="w-full rounded border px-3 py-2" />
         {params.slug && <p className="text-sm text-red-600">{params.slug}</p>}
       </div>
 
       <div className="space-y-1">
         <label htmlFor="paquete" className="block text-sm font-medium">Paquete</label>
-        <select id="paquete" name="paquete" className="w-full rounded border px-3 py-2">
+        <select id="paquete" name="paquete" defaultValue={params.v_paquete} className="w-full rounded border px-3 py-2">
           <option value="esencial">Esencial</option>
           <option value="clasico">Clásico</option>
           <option value="premium">Premium</option>
