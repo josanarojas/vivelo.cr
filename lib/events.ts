@@ -47,12 +47,6 @@ export async function updateEvent(supabase: Client, id: string, input: EventUpda
 }
 
 export async function deleteEvent(supabase: Client, id: string) {
-  const { data, error } = await supabase
-    .from('events')
-    .delete()
-    .eq('id', id)
-    .select('*')
-    .single()
-
-  return { data, error }
+  const { error } = await supabase.from('events').delete().eq('id', id)
+  return { data: null, error: error ?? null }
 }
